@@ -9,7 +9,7 @@ import {
   isEmpty,
 } from "lib/utils";
 import { useTranslations } from "use-intl";
-import { Button, buttonVariants } from "components/Button";
+import { Button, buttonVariants } from "@snailycad/ui";
 import { useGenerateCallsign } from "hooks/useGenerateCallsign";
 import useFetch from "lib/useFetch";
 import { useRouter } from "next/router";
@@ -44,6 +44,7 @@ export function AllUnitsTab({ search, units }: Props) {
   const { hasPermissions } = usePermission();
   const hasManagePermissions = hasPermissions([Permissions.ManageUnits], true);
   const hasDeletePermissions = hasPermissions([Permissions.DeleteUnits], true);
+  const hasViewUsersPermissions = hasPermissions([Permissions.ViewUsers], true);
   const { state, execute } = useFetch();
 
   const t = useTranslations();
@@ -111,7 +112,7 @@ export function AllUnitsTab({ search, units }: Props) {
       {hasManagePermissions && units.length >= 1 ? (
         <Button
           disabled={isEmpty(tableState.rowSelection)}
-          onClick={setSelectedUnitsOffDuty}
+          onPress={setSelectedUnitsOffDuty}
           className="mt-3"
         >
           {t("Management.setSelectedOffDuty")}
@@ -134,7 +135,7 @@ export function AllUnitsTab({ search, units }: Props) {
               id: unit.id,
               unit: LABELS[unit.type],
               name: makeUnitName(unit),
-              user: (
+              user: hasViewUsersPermissions ? (
                 <Link href={`/admin/manage/users/${unit.userId}`}>
                   <a
                     href={`/admin/manage/users/${unit.userId}`}
@@ -143,6 +144,8 @@ export function AllUnitsTab({ search, units }: Props) {
                     {unit.user.username}
                   </a>
                 </Link>
+              ) : (
+                unit.user.username
               ),
               callsign: generateCallsign(unit),
               badgeNumber: unit.badgeNumber,
@@ -171,7 +174,7 @@ export function AllUnitsTab({ search, units }: Props) {
                     <Button
                       size="xs"
                       className="ml-2"
-                      onClick={() => handleDeleteClick(unit)}
+                      onPress={() => handleDeleteClick(unit)}
                       variant="danger"
                     >
                       {common("delete")}

@@ -6,7 +6,7 @@ import { useRouter } from "next/router";
 import { useAuth } from "context/AuthContext";
 import { classNames } from "lib/classNames";
 import { Dropdown } from "components/Dropdown";
-import { Button } from "components/Button";
+import { Button } from "@snailycad/ui";
 import { useLocalStorage } from "react-use";
 import { ModalIds } from "types/ModalIds";
 import { useModal } from "state/modalState";
@@ -70,7 +70,7 @@ export function AccountDropdown() {
       >
         <Dropdown.LinkItem href="/account">{t("account")}</Dropdown.LinkItem>
         <hr className="my-2 mx-2 border-t border-secondary dark:border-quinary" />
-        <Dropdown.Item onClick={handleLogout}>{t("logout")}</Dropdown.Item>
+        <Dropdown.Item onPress={handleLogout}>{t("logout")}</Dropdown.Item>
         <hr className="my-2 mx-2 border-t border-secondary dark:border-quinary" />
 
         {cad?.version ? (
@@ -84,7 +84,7 @@ export function AccountDropdown() {
 
             <hr className="my-2 mx-2 border-t border-secondary dark:border-quinary" />
 
-            <Dropdown.Item className="flex items-center gap-2" onClick={handleChangelog}>
+            <Dropdown.Item className="flex items-center gap-2" onPress={handleChangelog}>
               {seenChangelog ? null : (
                 <span className="inline-block w-4 h-4 bg-green-500 rounded-full animate-pulse" />
               )}{" "}

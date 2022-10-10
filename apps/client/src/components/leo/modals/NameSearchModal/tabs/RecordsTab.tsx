@@ -3,7 +3,7 @@ import compareDesc from "date-fns/compareDesc";
 import { useRouter } from "next/router";
 import { Record, RecordType } from "@snailycad/types";
 import { useTranslations } from "use-intl";
-import { Button } from "components/Button";
+import { Button } from "@snailycad/ui";
 import { ModalIds } from "types/ModalIds";
 import { useModal } from "state/modalState";
 import { AlertModal } from "components/modal/AlertModal";
@@ -185,7 +185,7 @@ function RecordsTable({ data }: { data: Record[] }) {
                 <>
                   <Button
                     type="button"
-                    onClick={() => handleEditClick(record)}
+                    onPress={() => handleEditClick(record)}
                     size="xs"
                     variant="success"
                   >
@@ -196,7 +196,7 @@ function RecordsTable({ data }: { data: Record[] }) {
                     <Button
                       className="ml-2"
                       type="button"
-                      onClick={() => handleDeleteClick(record)}
+                      onPress={() => handleDeleteClick(record)}
                       size="xs"
                       variant="danger"
                     >

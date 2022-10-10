@@ -9,13 +9,11 @@ import { useValues } from "context/ValuesContext";
 import { toastMessage } from "lib/toastMessage";
 import { ModalIds } from "types/ModalIds";
 import { Form, Formik } from "formik";
-import { Input } from "components/form/inputs/Input";
+import { Button, Loader, TextField } from "@snailycad/ui";
 import { FormField } from "components/form/FormField";
 import useFetch from "lib/useFetch";
-import { Loader } from "components/Loader";
 import type { Full911Call } from "state/dispatch/dispatchState";
 import { Select } from "components/form/Select";
-import { Button } from "components/Button";
 import { useTranslations } from "next-intl";
 import { useCall911State } from "state/dispatch/call911State";
 import { useModal } from "state/modalState";
@@ -107,28 +105,35 @@ export function Manage911CallForm({ call, isDisabled, setShowAlert, handleClose 
     <Formik validate={validate} onSubmit={onSubmit} initialValues={INITIAL_VALUES}>
       {({ handleChange, setFieldValue, values, errors }) => (
         <Form className="w-full h-full">
-          <FormField errorMessage={errors.name} label={common("name")}>
-            <Input disabled={isDisabled} name="name" value={values.name} onChange={handleChange} />
-          </FormField>
+          <TextField
+            label={common("name")}
+            name="name"
+            onChange={(value) => setFieldValue("name", value)}
+            value={values.name}
+            errorMessage={errors.name}
+            isDisabled={isDisabled}
+          />
 
-          <FormRow>
-            <FormField errorMessage={errors.location} label={t("location")}>
-              <Input
-                disabled={isDisabled}
-                name="location"
-                value={values.location}
-                onChange={handleChange}
-              />
-            </FormField>
+          <FormRow flexLike>
+            <TextField
+              label={t("location")}
+              name="location"
+              onChange={(value) => setFieldValue("location", value)}
+              value={values.location}
+              errorMessage={errors.location}
+              isDisabled={isDisabled}
+              className="w-full"
+            />
 
-            <FormField errorMessage={errors.postal} label={t("postal")}>
-              <Input
-                disabled={isDisabled}
-                name="postal"
-                value={values.postal}
-                onChange={handleChange}
-              />
-            </FormField>
+            <TextField
+              label={t("postal")}
+              name="postal"
+              onChange={(value) => setFieldValue("postal", value)}
+              value={values.postal}
+              errorMessage={errors.postal}
+              isDisabled={isDisabled}
+              className="w-1/4"
+            />
           </FormRow>
 
           {router.pathname.includes("/citizen") ? (
@@ -244,13 +249,13 @@ export function Manage911CallForm({ call, isDisabled, setShowAlert, handleClose 
 
           <footer className={`mt-5 flex ${call ? "justify-between" : "justify-end"}`}>
             {call ? (
-              <Button onClick={handleEndClick} type="button" variant="danger" disabled={isDisabled}>
+              <Button onPress={handleEndClick} type="button" variant="danger" disabled={isDisabled}>
                 {t("endCall")}
               </Button>
             ) : null}
 
             <div className="flex">
-              <Button onClick={handleClose} type="button" variant="cancel">
+              <Button onPress={handleClose} type="button" variant="cancel">
                 {common("cancel")}
               </Button>
               <Button

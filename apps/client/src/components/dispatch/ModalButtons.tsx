@@ -1,5 +1,5 @@
 import { useTranslations } from "use-intl";
-import { Button } from "components/Button";
+import { Button } from "@snailycad/ui";
 import useFetch from "lib/useFetch";
 import { useSignal100 } from "hooks/shared/useSignal100";
 import { useFeatureEnabled } from "hooks/useFeatureEnabled";
@@ -68,18 +68,18 @@ export function DispatchModalButtons() {
         <ModalButton disabled={!isActive} key={idx} button={button} />
       ))}
 
-      <Button disabled={!isActive} onClick={handleSignal100} id="signal100">
+      <Button disabled={!isActive} onPress={handleSignal100} id="signal100">
         {signal100Enabled ? t("Leo.disableSignal100") : t("Leo.enableSignal100")}
       </Button>
 
       {TONES ? (
-        <Button disabled={!isActive} onClick={() => openModal(ModalIds.Tones)}>
+        <Button disabled={!isActive} onPress={() => openModal(ModalIds.Tones)}>
           {t("Leo.tones")}
         </Button>
       ) : null}
 
       {features.ACTIVE_DISPATCHERS ? (
-        <Button onClick={handleStateChangeDispatcher}>
+        <Button onPress={handleStateChangeDispatcher}>
           {isActive ? t("Leo.goOffDuty") : t("Leo.goOnDuty")}
         </Button>
       ) : null}

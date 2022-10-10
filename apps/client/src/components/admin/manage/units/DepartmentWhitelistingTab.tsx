@@ -3,7 +3,7 @@ import type { Unit } from "src/pages/admin/manage/units";
 import useFetch from "lib/useFetch";
 import { formatUnitDivisions, makeUnitName, formatOfficerDepartment } from "lib/utils";
 import { useTranslations } from "use-intl";
-import { Button, buttonVariants } from "components/Button";
+import { Button, buttonVariants } from "@snailycad/ui";
 import { useGenerateCallsign } from "hooks/useGenerateCallsign";
 import { Table, useTableState } from "components/shared/Table";
 import { TabsContent } from "components/shared/TabList";
@@ -14,6 +14,7 @@ import { useRouter } from "next/router";
 import Link from "next/link";
 import type { PostManageUnitAcceptDeclineDepartmentData } from "@snailycad/types/api";
 import { useFeatureEnabled } from "hooks/useFeatureEnabled";
+import { Permissions, usePermission } from "hooks/usePermission";
 
 interface Props {
   pendingOfficers: Unit[];
@@ -23,6 +24,7 @@ interface Props {
 export function DepartmentWhitelistingTab({ search, pendingOfficers }: Props) {
   const router = useRouter();
 
+  const { hasPermissions } = usePermission();
   const { openModal, closeModal } = useModal();
   const t = useTranslations();
   const common = useTranslations("Common");
@@ -30,6 +32,7 @@ export function DepartmentWhitelistingTab({ search, pendingOfficers }: Props) {
   const { state, execute } = useFetch();
   const tableState = useTableState({ search: { value: search } });
   const { DIVISIONS } = useFeatureEnabled();
+  const hasViewUsersPermissions = hasPermissions([Permissions.ViewUsers], true);
 
   async function handleAcceptOrDecline(data: {
     unit: Unit;
@@ -66,7 +69,7 @@ export function DepartmentWhitelistingTab({ search, pendingOfficers }: Props) {
             badgeNumber: officer.badgeNumber,
             department: formatOfficerDepartment(officer) ?? common("none"),
             division: formatUnitDivisions(officer),
-            user: (
+            user: hasViewUsersPermissions ? (
               <Link href={`/admin/manage/users/${officer.userId}`}>
                 <a
                   href={`/admin/manage/users/${officer.userId}`}
@@ -75,12 +78,14 @@ export function DepartmentWhitelistingTab({ search, pendingOfficers }: Props) {
                   {officer.user.username}
                 </a>
               </Link>
+            ) : (
+              officer.user.username
             ),
             actions: (
               <>
                 <Button
                   disabled={state === "loading"}
-                  onClick={() => handleAcceptOrDecline({ unit: officer, type: "ACCEPT" })}
+                  onPress={() => handleAcceptOrDecline({ unit: officer, type: "ACCEPT" })}
                   size="xs"
                   variant="success"
                 >
@@ -88,7 +93,7 @@ export function DepartmentWhitelistingTab({ search, pendingOfficers }: Props) {
                 </Button>
 
                 <Button
-                  onClick={() => openModal(ModalIds.AlertDeclineOfficer, officer)}
+                  onPress={() => openModal(ModalIds.AlertDeclineOfficer, officer)}
                   disabled={state === "loading"}
                   className="ml-2"
                   size="xs"
